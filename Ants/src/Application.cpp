@@ -12,11 +12,16 @@ Application::Application(unsigned int _x, unsigned int _y) :
 void Application::Start() {
     this->ptrWindow = new sf::RenderWindow(sf::VideoMode(windowX, windowY), "SFML works!");
 
+//    this->ptrWindow->setFramerateLimit(60);
+
     AntManager* antManager = new AntManager(this->ptrWindow, 1, 1);
 
-    Ant* ant = new Ant(antManager, 1, 1);
-
-    antManager->AddAnt(ant);
+    for (auto i = 0; i < this->ptrWindow->getSize().x; i++) {
+        for (auto j = 0; j < this->ptrWindow->getSize().y; j++) {
+            if (rand() % 100 < 3)
+                antManager->AddAnt(new Ant(antManager, i, j));
+        }
+    }
 
     while (this->ptrWindow->isOpen())
     {

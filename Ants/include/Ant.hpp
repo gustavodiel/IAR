@@ -18,6 +18,7 @@ public:
 
     Ant(AntManager*, unsigned int, unsigned int);
 
+
     void Update();
     void Draw();
 

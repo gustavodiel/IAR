@@ -15,6 +15,8 @@ public:
     unsigned int cellSizeX, cellSizeY;
 
     std::vector<class Ant*>       ants;
+    std::vector<class Ant*>       alive_ants;
+    std::vector<class Ant*>       dead_ants;
 
     sf::RectangleShape      *ptrShape;
 
@@ -22,7 +24,7 @@ public:
 
     AntManager(sf::RenderWindow*, unsigned int, unsigned int);
 
-    void AddAnt(class Ant*);
+    void AddAnt(Ant*);
     void Update();
     void Draw();
 
