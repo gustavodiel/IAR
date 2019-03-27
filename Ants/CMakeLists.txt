@@ -12,6 +12,6 @@ set(SFML_STATIC_LIBRARIES TRUE)
 
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
-add_executable(Ants src/main.cpp src/Application.cpp src/Ant.cpp src/AntManager.cpp)
+add_executable(Ants src/main.cpp src/Application.cpp src/Ant.cpp  src/Grain.cpp src/EntityManager.cpp)
 
 target_link_libraries(Ants sfml-graphics sfml-window sfml-system)
