@@ -13,8 +13,12 @@
 class EntityManager {
 
 public:
-    MAP_TYPE cellSizeX, cellSizeY;
-    POSITION_TYPE maxX, maxY;
+	MAP_TYPE cellSizeX, cellSizeY;
+	POSITION_TYPE windowsWidth, windowsHeight;
+	POSITION_TYPE amountCellsWidth, amountCellsHeight;
+
+	bool drawAnts = true;
+	bool drawGrains = true;
 
     std::vector<class Ant*>         ants;
     std::vector<class Grain*>       grains;
@@ -22,7 +26,8 @@ public:
     class Ant***                    antsMatrix;
     class Grain***                  grainsMatrix;
 
-    sf::RectangleShape      *ptrShape;
+	sf::RectangleShape      *ptrRectangleShape;
+	sf::CircleShape			*ptrCircleShape;
 
     sf::RenderWindow        *ptrWindow;
 
@@ -34,7 +39,7 @@ public:
     void AddGrain(Grain*);
     void MoveGrain(Grain*, POSITION_TYPE, POSITION_TYPE);
 
-    std::vector<Grain*> GetGrainsInRadius(POSITION_TYPE, POSITION_TYPE, uint8_t);
+    std::pair<std::vector<Grain*>, int> GetGrainsInRadius(POSITION_TYPE, POSITION_TYPE, uint8_t);
     std::vector<Ant*> GetAntsInRadius(POSITION_TYPE, POSITION_TYPE, uint8_t);
 
     bool LocationIsValid(POSITION_TYPE x, POSITION_TYPE y);
@@ -47,12 +52,10 @@ public:
     std::pair<POSITION_TYPE, POSITION_TYPE> GetValidAntPosition();
     std::pair<POSITION_TYPE, POSITION_TYPE> GetValidGrainPosition();
 
+	bool IsOnEntity(POSITION_TYPE x, POSITION_TYPE y);
+
     void Update();
     void Draw();
-
-    Ant* AntAt(POSITION_TYPE, POSITION_TYPE);
-
-    MAP_TYPE CoordToIndex(POSITION_TYPE, POSITION_TYPE);
 };
 
 

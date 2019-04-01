@@ -25,5 +25,7 @@ private:
 
 };
 
+void* thread_job(void*);
+
 
 #endif //ANTS_APPLICATION_H

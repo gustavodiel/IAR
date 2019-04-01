@@ -2,7 +2,7 @@
 
 int main()
 {
-    auto app = new Application(800, 800);
+    auto app = new Application(1200, 1200);
 
     app->Start();
 

@@ -7,6 +7,7 @@ Grain::Grain(EntityManager * ptrEntityManager, POSITION_TYPE x, POSITION_TYPE y,
     this->ptrEntityManager = ptrEntityManager;
 
     this->taken = false;
+	this->onSight = false;
 
     this->size = size;
     this->weight = weight;
@@ -23,9 +24,15 @@ void Grain::Draw() {
         return;
     }
 
-    this->ptrEntityManager->ptrShape->setFillColor(sf::Color::Yellow);
+	if (onSight) {
+		this->ptrEntityManager->ptrRectangleShape->setFillColor(sf::Color::Red);
+		onSight = false;
+	}
+	else {
+		this->ptrEntityManager->ptrRectangleShape->setFillColor(sf::Color::Yellow);
+	}
 
-    this->ptrEntityManager->ptrShape->setPosition(this->posX, this->posY);
+	this->ptrEntityManager->ptrRectangleShape->setPosition(this->posX * this->ptrEntityManager->cellSizeX, this->posY * this->ptrEntityManager->cellSizeY);
 
-    this->ptrEntityManager->ptrWindow->draw(*this->ptrEntityManager->ptrShape);
+    this->ptrEntityManager->ptrWindow->draw(*this->ptrEntityManager->ptrRectangleShape);
 }
