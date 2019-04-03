@@ -27,8 +27,10 @@ public:
     std::vector<Ant*> suroundAnts;
     std::vector<Grain*> suroundGrains;
 
-    uint8_t radius = 5;
-    
+    static uint8_t radius;
+    static double k1;
+    static double k2;
+
     void Update();
     void Draw();
 

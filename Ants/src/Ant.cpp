@@ -10,6 +10,18 @@
 #include "../include/Grain.hpp"
 #include "../include/Entity.hpp"
 
+// Para Raio = 1:
+// k1 = 0.01; k2 = 0.9 ou 0.5
+
+
+// Para Raio = 5:
+// k1 = 0.1; k2 = 0.1
+
+uint_fast8_t Ant::radius = 5;
+
+double Ant::k1 = 0.1; // Pick
+double Ant::k2 = 0.1; // Drop
+
 Ant::Ant(EntityManager * ptrEntityManager, POSITION_TYPE x, POSITION_TYPE y) {
     this->ptrEntityManager = ptrEntityManager;
 
@@ -17,9 +29,9 @@ Ant::Ant(EntityManager * ptrEntityManager, POSITION_TYPE x, POSITION_TYPE y) {
     this->posY = y;
 
     std::random_device rd;
-	randomMachine = std::mt19937(rd());
-	integerDistribution = std::uniform_int_distribution<POSITION_TYPE>(-1, 1);
-	realDistribution = std::uniform_real_distribution<double>(0.0, 1.0);
+  	randomMachine = std::mt19937(rd());
+  	integerDistribution = std::uniform_int_distribution<POSITION_TYPE>(-1, 1);
+  	realDistribution = std::uniform_real_distribution<double>(0.0, 1.0);
 
     this->takenGrain = NULL;
 
@@ -90,25 +102,23 @@ void Ant::CheckNeighbors() {
 
 double Ant::SumFOfX() {
     double totalDead = (double) this->suroundGrains.size();
-    double radiusTotal = this->radius * this->radius;
+
+	int mainNumber = this->totalSuroundBlocks;
+    double radiusTotal = mainNumber;
 
     return totalDead / (radiusTotal * radiusTotal);
 }
 
 double Ant::ProbabilityOfPickingUp() {
-    double avgSuround = this->SumFOfX();
-    double k1 = 0.5;
-    double finalCount = k1 / (k1 + avgSuround);
+    double sumOfX = this->SumFOfX();
 
-    return finalCount;
+    return this->k1 / (this->k1 + sumOfX);
 }
 
 double Ant::ProbabilityOfDropping() {
-    double avgSuround = this->SumFOfX();
-    double k2 = 0.5;
-    double finalCount = avgSuround / (k2 + avgSuround);
+    double sumOfX = this->SumFOfX();
 
-    return finalCount;
+    return sumOfX / (this->k2 + sumOfX);
 }
 
 void Ant::Draw() {

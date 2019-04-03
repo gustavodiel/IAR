@@ -10,9 +10,8 @@
 #include "../include/Grain.hpp"
 
 EntityManager::EntityManager(sf::RenderWindow *_ptrWindow, MAP_TYPE _cellSizeX, MAP_TYPE _cellSizeY) {
-	this->ptrRectangleShape = new sf::RectangleShape();
-	this->ptrCircleShape = new sf::CircleShape();
-
+    this->ptrRectangleShape = new sf::RectangleShape();
+    this->ptrCircleShape = new sf::CircleShape();
 
     this->ptrWindow = _ptrWindow;
 
@@ -22,8 +21,8 @@ EntityManager::EntityManager(sf::RenderWindow *_ptrWindow, MAP_TYPE _cellSizeX, 
     this->windowsWidth = this->ptrWindow->getSize().x;
     this->windowsHeight = this->ptrWindow->getSize().y;
 
-	this->amountCellsWidth = this->windowsWidth / this->cellSizeX;
-	this->amountCellsHeight = this->windowsHeight / this->cellSizeY;
+    this->amountCellsWidth = this->windowsWidth / this->cellSizeX;
+    this->amountCellsHeight = this->windowsHeight / this->cellSizeY;
 
     this->antsMatrix = (Ant***) malloc(sizeof(Ant**) * this->amountCellsWidth);
     this->grainsMatrix = (Grain***) malloc(sizeof(Grain**) * this->amountCellsWidth);
@@ -44,7 +43,7 @@ EntityManager::EntityManager(sf::RenderWindow *_ptrWindow, MAP_TYPE _cellSizeX, 
 }
 
 void EntityManager::Update() {
-    for (auto i = 0; i < 10; i++) {
+    for (auto i = 0; i < 100; i++) {
 		for (const auto& ant : ants) {
             ant->Update();
         }
@@ -52,15 +51,15 @@ void EntityManager::Update() {
 }
 
 void EntityManager::Draw() {
-	if (drawAnts)
-		for (const auto& ant : ants) {
-			ant->Draw();
-		}
+    if (drawAnts)
+        for (const auto& ant : ants) {
+                ant->Draw();
+        }
 
-	if (drawGrains)
-		for (const auto& grain : grains) {
-			grain->Draw();
-		}
+    if (drawGrains)
+        for (const auto& grain : grains) {
+            grain->Draw();
+        }
 }
 
 void EntityManager::AddAnt(Ant *ant) {
@@ -97,40 +96,42 @@ void EntityManager::MoveGrain(Grain *grain, POSITION_TYPE newX, POSITION_TYPE ne
 
 std::pair<std::vector<Grain*>, int> EntityManager::GetGrainsInRadius(POSITION_TYPE posX, POSITION_TYPE posY, uint8_t radius) {
     std::vector<Grain*> entities;
-	int total = 0;
+    int total = 0;
 
-	POSITION_TYPE findX;
-	POSITION_TYPE findY;
+    POSITION_TYPE findX;
+    POSITION_TYPE findY;
 
-	for (auto i = -radius; i <= radius; i++) {
-		for (auto j = -radius; j <= radius; j++) {
-			findX = posX + i;
-			findY = posY + j;
+    for (auto i = -radius; i <= radius; i++) {
+        for (auto j = -radius; j <= radius; j++) {
+            findX = posX + i;
+            findY = posY + j;
 
             if (!this->LocationIsValid(findX, findY)){
                 continue;
             }
 
-            Grain* possible = this->grainsMatrix[posX + i][posY + j];
+            total++;
+
+            Grain* possible = this->grainsMatrix[findX][findY];
             if (possible != NULL) {
-				total++;
-				//possible->onSight = true;
                 entities.push_back(possible);
             }
         }
     }
+
+    // printf("Got %d ants, in a radious of %d\n", entities.size(), total);
     return make_pair(entities, total);
 }
 
 std::vector<Ant*> EntityManager::GetAntsInRadius(POSITION_TYPE posX, POSITION_TYPE posY, uint8_t radius) {
     std::vector<Ant*> entities;
 
-	POSITION_TYPE findX;
-	POSITION_TYPE findY;
+		POSITION_TYPE findX;
+		POSITION_TYPE findY;
 
     for (auto i = -radius; i <= radius; i++) {
         for (auto j = -radius; j <= radius; j++) {
-			findX = posX + i;
+						findX = posX + i;
             findY = posY + j;
 
             if (!this->LocationIsValid(findX, findY)){
@@ -182,7 +183,7 @@ std::pair<POSITION_TYPE, POSITION_TYPE> EntityManager::GetValidAntPosition() {
     std::uniform_real_distribution<double> dist(0.0, 1.0);
 
     POSITION_TYPE x = dist(mt) * this->amountCellsWidth;
-	POSITION_TYPE y = dist(mt) * this->amountCellsHeight;
+		POSITION_TYPE y = dist(mt) * this->amountCellsHeight;
 
     while (this->IsOnAnt(x, y) != NULL) {
         x = dist(mt) * this->amountCellsWidth;
@@ -197,8 +198,8 @@ std::pair<POSITION_TYPE, POSITION_TYPE> EntityManager::GetValidGrainPosition() {
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(0.0, 1.0);
 
-	POSITION_TYPE x = dist(mt) * this->amountCellsWidth;
-	POSITION_TYPE y = dist(mt) * this->amountCellsHeight;
+		POSITION_TYPE x = dist(mt) * this->amountCellsWidth;
+		POSITION_TYPE y = dist(mt) * this->amountCellsHeight;
 
     while (this->IsOnGrain(x, y) != NULL) {
 		x = dist(mt) * this->amountCellsWidth;
@@ -217,13 +218,13 @@ void EntityManager::ReplaceGrainOnMap(Grain* grain) {
 }
 
 bool EntityManager::IsOnEntity(POSITION_TYPE x, POSITION_TYPE y) {
-	if (!this->LocationIsValid(x, y)) {
+		if (!this->LocationIsValid(x, y)) {
+				return false;
+		}
+
+		if (this->grainsMatrix[x][y] != NULL || this->antsMatrix[x][y] != NULL) {
+				return true;
+		}
+
 		return false;
-	}
-
-	if (this->grainsMatrix[x][y] != NULL || this->antsMatrix[x][y] != NULL) {
-		return true;
-	}
-
-	return false;
 }

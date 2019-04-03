@@ -16,20 +16,20 @@ void Application::Start() {
 
     //this->ptrWindow->setFramerateLimit(10);
 
-    EntityManager* entityManager = new EntityManager(this->ptrWindow, 2, 2);
-    
-    int num_ants = 2000;
-    int num_grains = 5000;
+    EntityManager* entityManager = new EntityManager(this->ptrWindow, 5, 5);
+
+    int num_ants = 10;
+    int num_grains = 500;
 
     for (auto i = 0; i < num_ants; i++) {
         std::pair<POSITION_TYPE, POSITION_TYPE> position = entityManager->GetValidAntPosition();
-        
+
         entityManager->AddAnt(new Ant(entityManager, position.first, position.second));
     }
 
     for (auto i = 0; i < num_grains; i++) {
         std::pair<POSITION_TYPE, POSITION_TYPE> position = entityManager->GetValidGrainPosition();
-        
+
         entityManager->AddGrain(new Grain(entityManager, position.first, position.second, 1, 1));
     }
 
