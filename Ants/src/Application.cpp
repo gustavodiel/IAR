@@ -14,12 +14,18 @@ Application::Application(MAP_TYPE _x, MAP_TYPE _y) :
 void Application::Start() {
     this->ptrWindow = new sf::RenderWindow(sf::VideoMode(windowX, windowY), "Inteligencia Artificial - Ants");
 
-    //this->ptrWindow->setFramerateLimit(10);
+    // this->ptrWindow->setFramerateLimit(5);
 
-    EntityManager* entityManager = new EntityManager(this->ptrWindow, 5, 5);
+    int cellSizeX = 5;
+    int cellSizeY = 5;
 
-    int num_ants = 10;
-    int num_grains = 500;
+    EntityManager* entityManager = new EntityManager(this->ptrWindow, cellSizeX, cellSizeY);
+
+    int cellsWidth = this->ptrWindow->getSize().x / cellSizeX;
+    int cellsHeight = this->ptrWindow->getSize().y / cellSizeY;
+
+    int num_ants = cellsWidth * cellsHeight * 0.05;
+    int num_grains = cellsWidth * cellsHeight * 0.2;
 
     for (auto i = 0; i < num_ants; i++) {
         std::pair<POSITION_TYPE, POSITION_TYPE> position = entityManager->GetValidAntPosition();

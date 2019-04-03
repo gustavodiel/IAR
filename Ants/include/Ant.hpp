@@ -38,6 +38,9 @@ public:
     double ProbabilityOfPickingUp();
     double ProbabilityOfDropping();
 
+    void UpdateCarriage();
+    void MoveAnt();
+
     void CheckNeighbors();
 
     std::pair<POSITION_TYPE, POSITION_TYPE> GetNextMove();

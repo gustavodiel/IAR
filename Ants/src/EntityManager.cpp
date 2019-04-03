@@ -51,14 +51,14 @@ void EntityManager::Update() {
 }
 
 void EntityManager::Draw() {
-    if (drawAnts)
-        for (const auto& ant : ants) {
-                ant->Draw();
-        }
-
     if (drawGrains)
         for (const auto& grain : grains) {
             grain->Draw();
+        }
+
+    if (drawAnts)
+        for (const auto& ant : ants) {
+                ant->Draw();
         }
 }
 
@@ -114,12 +114,12 @@ std::pair<std::vector<Grain*>, int> EntityManager::GetGrainsInRadius(POSITION_TY
 
             Grain* possible = this->grainsMatrix[findX][findY];
             if (possible != NULL) {
+                // possible->onSight = true;
                 entities.push_back(possible);
             }
         }
     }
 
-    // printf("Got %d ants, in a radious of %d\n", entities.size(), total);
     return make_pair(entities, total);
 }
 
@@ -134,7 +134,7 @@ std::vector<Ant*> EntityManager::GetAntsInRadius(POSITION_TYPE posX, POSITION_TY
 						findX = posX + i;
             findY = posY + j;
 
-            if (!this->LocationIsValid(findX, findY)){
+            if (!this->LocationIsValid(findX, findY) || (i == 0 && j == 0)){
                 continue;
             }
 
