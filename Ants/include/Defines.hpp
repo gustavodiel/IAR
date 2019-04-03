@@ -5,7 +5,7 @@
 #ifndef DEFINES_HPP
 #define DEFINES_HPP
 
-#define MAP_TYPE int
-#define POSITION_TYPE int
+#define MAP_TYPE int_fast32_t
+#define POSITION_TYPE int_fast32_t
 
 #endif // DEFINES_HPP

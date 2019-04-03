@@ -12,6 +12,7 @@ class Grain : public Entity {
 public:
     int size, weight;
     bool taken;
+	bool onSight;
 
     Grain(EntityManager * ptrEntityManager, POSITION_TYPE x, POSITION_TYPE y, int size, int weight);
 
