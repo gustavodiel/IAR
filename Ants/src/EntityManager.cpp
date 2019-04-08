@@ -43,10 +43,8 @@ EntityManager::EntityManager(sf::RenderWindow *_ptrWindow, MAP_TYPE _cellSizeX, 
 }
 
 void EntityManager::Update() {
-    for (auto i = 0; i < 100; i++) {
-		for (const auto& ant : ants) {
-            ant->Update();
-        }
+    for (const auto& ant : ants) {
+        ant->Update();
     }
 }
 
@@ -56,10 +54,10 @@ void EntityManager::Draw() {
             grain->Draw();
         }
 
-    if (drawAnts)
-        for (const auto& ant : ants) {
-                ant->Draw();
-        }
+    // if (drawAnts)
+    //     for (const auto& ant : ants) {
+    //             ant->Draw();
+    //     }
 }
 
 void EntityManager::AddAnt(Ant *ant) {

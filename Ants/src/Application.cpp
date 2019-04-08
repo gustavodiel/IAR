@@ -4,6 +4,8 @@
 
 #include "../include/Application.hpp"
 
+#include <sstream>
+
 #include "../include/EntityManager.hpp"
 #include "../include/Ant.hpp"
 #include "../include/Grain.hpp"
@@ -39,7 +41,14 @@ void Application::Start() {
         entityManager->AddGrain(new Grain(entityManager, position.first, position.second, 1, 1));
     }
 
+    int total = 0;
+    int i = 0;
+
+    sf::Image screenShotImage;
+
 	sf::Clock clock;
+
+    bool shouldTakeSSNextFrame = true;
 
     while (this->ptrWindow->isOpen())
     {
@@ -50,21 +59,41 @@ void Application::Start() {
 				this->ptrWindow->close();
 		}
 
-		//float ElapsedTime = clock.getElapsedTime().asSeconds();
-		//clock.restart();
-
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 			entityManager->drawAnts = !entityManager->drawAnts;
 		}
 
 		this->ptrWindow->clear();
 
-		entityManager->Update();
+        for (i = 0; i < 1000; i++) {
+            if (total = 1'000'000) {
+                entityManager->Update();
+            }
+            total++;
+
+            if (total == 1 || total == 500'000 || total == 999'999) {
+                entityManager->Draw();
+
+                printf("Total: %d\n", total);
+
+                this->ptrWindow->display();
+
+                screenShotImage = ptrWindow->capture();
+
+                std::ostringstream s;
+                s << "frame_" << total << ".jpg";
+
+                printf("Savez!\n");
+
+                screenShotImage.saveToFile(s.str());
+            }
+        }
+
 		entityManager->Draw();
 
-		this->ptrWindow->display();
+        printf("Total: %d\n", total);
 
-		//printf("Frame took %5lf\n", ElapsedTime);
+		this->ptrWindow->display();
     }
 }
 

@@ -20,7 +20,7 @@
 uint_fast8_t Ant::radius = 5;
 
 double Ant::k1 = 0.1; // Pick
-double Ant::k2 = 0.01; // Drop
+double Ant::k2 = 0.1; // Drop
 
 Ant::Ant(EntityManager * ptrEntityManager, POSITION_TYPE x, POSITION_TYPE y) {
     this->ptrEntityManager = ptrEntityManager;
