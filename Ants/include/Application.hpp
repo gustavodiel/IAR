@@ -6,13 +6,14 @@
 #define ANTS_APPLICATION_H
 
 #include <SFML/Graphics.hpp>
+#include "Defines.hpp"
 
 class Application {
 public:
 
-    unsigned int windowX, windowY;
+    MAP_TYPE windowX, windowY;
 
-    Application(unsigned int _x, unsigned int _y);
+    Application(MAP_TYPE _x, MAP_TYPE _y);
 
     void Start();
 
@@ -23,6 +24,8 @@ private:
     void ProcessLoop();
 
 };
+
+void* thread_job(void*);
 
 
 #endif //ANTS_APPLICATION_H

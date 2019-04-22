@@ -4,55 +4,164 @@
 
 #include "../include/Ant.hpp"
 
-Ant::Ant(AntManager * _ptrAntManager, unsigned int x, unsigned int y) {
-    this->ptrAntManager = _ptrAntManager;
+#include <random>
 
-    this->dead = false;
+#include "../include/EntityManager.hpp"
+#include "../include/Grain.hpp"
+#include "../include/Entity.hpp"
+
+// Para Raio = 1:
+// k1 = 0.01; k2 = 0.2
+
+
+// Para Raio = 5:
+// k1 = 0.1; k2 = 0.1
+
+uint_fast8_t Ant::radius = 5;
+
+double Ant::k1 = 0.1; // Pick
+double Ant::k2 = 0.1; // Drop
+
+Ant::Ant(EntityManager * ptrEntityManager, POSITION_TYPE x, POSITION_TYPE y) {
+    this->ptrEntityManager = ptrEntityManager;
 
     this->posX = x;
     this->posY = y;
+
+    std::random_device rd;
+  	randomMachine = std::mt19937(rd());
+  	integerDistribution = std::uniform_int_distribution<POSITION_TYPE>(-1, 1);
+  	realDistribution = std::uniform_real_distribution<double>(0.0, 1.0);
+
+    this->takenGrain = NULL;
+
+    this->maxX = this->ptrEntityManager->amountCellsWidth - 1;
+    this->maxY = this->ptrEntityManager->amountCellsHeight - 1;
 }
 
-
 void Ant::Update() {
-    int velX = 0;
-    int velY = 0;
+    this->UpdateCarriage();
+    this->MoveAnt();
+}
 
-    if (rand() % 100 < 30) {
-        velX = -1;
-    } else if (rand() % 100 < 80) {
-        velX = 1;
+void Ant::MoveAnt() {
+  std::pair<POSITION_TYPE, POSITION_TYPE> move = this->GetNextMove();
+
+  POSITION_TYPE newPosX = this->posX + move.first;
+  POSITION_TYPE newPosY = this->posY + move.second;
+
+  if (newPosX > this->maxX || newPosX < 0) {
+    newPosX = this->posX;
+  }
+
+  if (newPosY > this->maxY || newPosY < 0) {
+    newPosY = this->posY;
+  }
+
+  this->ptrEntityManager->MoveAnt(this, newPosX, newPosY);
+}
+
+void Ant::UpdateCarriage() {
+  Grain* possibleGrain = this->ptrEntityManager->IsOnGrain(this->posX, this->posY);
+
+  bool mayTakeGrain = (this->takenGrain == NULL && possibleGrain);
+  bool mayDropGrain = (this->takenGrain != NULL && possibleGrain == NULL);
+
+  if (mayTakeGrain || mayDropGrain) {
+    this->CheckNeighbors();
+
+    if (mayTakeGrain) {
+      double randomNumber = this->realDistribution(this->randomMachine);
+      double chance = this->ProbabilityOfPickingUp();
+      // printf("PICK For %u blocks out of %i, prob is %lf\n", this->suroundGrains.size(), this->totalSuroundBlocks, chance);
+
+      if (randomNumber < chance) {
+        possibleGrain->taken = true;
+        this->ptrEntityManager->RemoveGrainFromMap(possibleGrain);
+        this->takenGrain = possibleGrain;
+      }
+    } else {
+      double randomNumber = this->realDistribution(this->randomMachine);
+      double chance = this->ProbabilityOfDropping();
+      // printf("DROP For %u blocks out of %i, prob is %lf\n", this->suroundGrains.size(), this->totalSuroundBlocks, chance);
+
+      if (randomNumber < chance) {
+        this->takenGrain->taken = false;
+        this->takenGrain->posX = this->posX;
+        this->takenGrain->posY = this->posY;
+        this->ptrEntityManager->ReplaceGrainOnMap(this->takenGrain);
+
+        this->takenGrain = NULL;
+      }
     }
+  }
+}
 
-    if (rand() % 100 < 30) {
-        velY = -1;
-    } else if (rand() % 100 < 30) {
-        velY = 1;
-    }
+std::pair<POSITION_TYPE, POSITION_TYPE> Ant::GetNextMove() {
 
-    this->posX += velX;
-    this->posY += velY;
+    return std::make_pair(this->integerDistribution(this->randomMachine), this->integerDistribution(this->randomMachine));
+}
 
-    if (this->posX >= this->ptrAntManager->ptrWindow->getSize().x) {
-        this->posX = 0;
-    }
+void Ant::CheckNeighbors() {
+	auto grainResult = this->ptrEntityManager->GetGrainsInRadius(this->posX, this->posY, this->radius);
 
-    if (this->posX < 0) {
-        this->posX = this->ptrAntManager->ptrWindow->getSize().x - 1;
-    }
+	// this->suroundAnts = this->ptrEntityManager->GetAntsInRadius(this->posX, this->posY, this->radius);
+	this->suroundGrains = grainResult.first;
 
-    if (this->posY >= this->ptrAntManager->ptrWindow->getSize().y) {
-        this->posY = 0;
-    }
+	this->totalSuroundBlocks = grainResult.second;
+}
 
-    if (this->posY < 0) {
-        this->posY = this->ptrAntManager->ptrWindow->getSize().y - 1;
-    }
+double Ant::SumFOfX() {
+    double totalDead = (double) this->suroundGrains.size();
+
+    // int mainNumber = this->totalSuroundBlocks;
+    int blockSize = (2 * this->radius + 1);
+    int mainNumber = (blockSize * blockSize - 1);
+    double radiusTotal = mainNumber;
+
+    return totalDead / (radiusTotal * radiusTotal);
+}
+
+double Ant::ProbabilityOfPickingUp() {
+    double sumOfX = this->SumFOfX();
+    double chance = this->k1 / (this->k1 + sumOfX);
+
+    return chance * chance;
+}
+
+double Ant::ProbabilityOfDropping() {
+    double sumOfX = this->SumFOfX();
+    double chance = sumOfX / (this->k2 + sumOfX);
+
+    return chance * chance;
 }
 
 void Ant::Draw() {
-    this->ptrAntManager->ptrShape->setFillColor(sf::Color::Green);
-    this->ptrAntManager->ptrShape->setPosition(this->posX, this->posY);
+	static bool debug = false;
 
-    this->ptrAntManager->ptrWindow->draw(*this->ptrAntManager->ptrShape);
+	float posX = this->posX * this->ptrEntityManager->cellSizeX;
+	float posY = this->posY * this->ptrEntityManager->cellSizeY;
+
+    if (this->takenGrain != NULL) {
+        this->ptrEntityManager->ptrRectangleShape->setFillColor(sf::Color::Green);
+    } else {
+        this->ptrEntityManager->ptrRectangleShape->setFillColor(sf::Color::Blue);
+    }
+    this->ptrEntityManager->ptrRectangleShape->setPosition(posX, posY);
+
+    this->ptrEntityManager->ptrWindow->draw(*this->ptrEntityManager->ptrRectangleShape);
+
+
+	if (debug) {
+		float radius = (this->radius + 1) * this->ptrEntityManager->cellSizeX;
+
+		this->ptrEntityManager->ptrCircleShape->setFillColor(sf::Color(255, 0, 0, 10));
+
+		this->ptrEntityManager->ptrCircleShape->setRadius(radius);
+
+		this->ptrEntityManager->ptrCircleShape->setPosition(posX, posY);
+		this->ptrEntityManager->ptrCircleShape->setOrigin(radius, radius);
+
+		this->ptrEntityManager->ptrWindow->draw(*this->ptrEntityManager->ptrCircleShape);
+	}
 }

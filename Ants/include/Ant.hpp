@@ -5,23 +5,45 @@
 #ifndef ANTS_ANT_HPP
 #define ANTS_ANT_HPP
 
-#include "AntManager.hpp"
+#include <random>
 
+#include "Defines.hpp"
+#include "Entity.hpp"
 
-class Ant {
+class Ant : public Entity {
 public:
-    unsigned int posX, posY;
+    Ant(EntityManager*, POSITION_TYPE, POSITION_TYPE);
 
-    bool dead;
+	uint8_t totalSuroundBlocks;
 
-    AntManager      *ptrAntManager;
+    POSITION_TYPE maxX, maxY;
 
-    Ant(AntManager*, unsigned int, unsigned int);
+    Grain* takenGrain;
 
+	std::mt19937 randomMachine;
+	std::uniform_int_distribution<POSITION_TYPE> integerDistribution;
+	std::uniform_real_distribution<double> realDistribution;
+
+    std::vector<Ant*> suroundAnts;
+    std::vector<Grain*> suroundGrains;
+
+    static uint8_t radius;
+    static double k1;
+    static double k2;
 
     void Update();
     void Draw();
 
+    double SumFOfX();
+    double ProbabilityOfPickingUp();
+    double ProbabilityOfDropping();
+
+    void UpdateCarriage();
+    void MoveAnt();
+
+    void CheckNeighbors();
+
+    std::pair<POSITION_TYPE, POSITION_TYPE> GetNextMove();
 };
 
 

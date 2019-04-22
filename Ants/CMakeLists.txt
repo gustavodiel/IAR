@@ -8,10 +8,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(SFML_STATIC_LIBRARIES TRUE)
 
 ## In most cases better set in the CMake cache
-#set(SFML_DIR "<sfml root prefix>/lib/cmake/SFML")
+set(SFML_DIR "~/Downloads/SFML-2.5.1/")
 
-find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
+find_package(SFML 2.5.1 COMPONENTS graphics window system REQUIRED)
 
-add_executable(Ants src/main.cpp src/Application.cpp src/Ant.cpp src/AntManager.cpp)
+add_executable(Ants src/main.cpp src/Application.cpp src/Ant.cpp  src/Grain.cpp src/EntityManager.cpp)
 
 target_link_libraries(Ants sfml-graphics sfml-window sfml-system)
