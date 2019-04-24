@@ -3,7 +3,7 @@ import numpy as np
 from helpers import *
 
 def update_temperature(iteration, max_iterations, initial_temperature, final_temperature):
-    return (initial_temperature - final_temperature) / (np.cosh(10 * iteration / max_iterations)) + final_temperature
+    return (initial_temperature - final_temperature) / (np.cosh(5 * iteration / max_iterations)) + final_temperature
 
 
 def random_search(name, expected_right, clauses, num_vars, max_iterations, repetitions):
@@ -30,6 +30,7 @@ def random_search(name, expected_right, clauses, num_vars, max_iterations, repet
         total_scores.append(local_scores)
 
     np_scores = np.array(total_scores)
+    best_scores = np_scores.min(axis=1)
 
     convergence = pd.DataFrame(
         np_scores.mean(axis=0), np.arange(max_iterations), columns=["clausulas"]
@@ -37,7 +38,7 @@ def random_search(name, expected_right, clauses, num_vars, max_iterations, repet
 
     plot_convergence(convergence, "random_search", name)
 
-    return np_scores.mean(), np_scores.std()
+    return best_scores.mean(), best_scores.std()
 
 
 def simmulated_annealing(
@@ -84,6 +85,7 @@ def simmulated_annealing(
         total_scores.append(local_scores)
 
     np_scores = np.array(total_scores)
+    best_scores = np_scores.min(axis=1)
 
     convergence = pd.DataFrame(
         np_scores.mean(axis=0), np.arange(max_iterations), columns=["clausulas"]
@@ -91,4 +93,4 @@ def simmulated_annealing(
 
     plot_convergence(convergence, "simulated_anealing", name)
 
-    return np_scores.mean(), np_scores.std()
+    return best_scores.mean(), best_scores.std()

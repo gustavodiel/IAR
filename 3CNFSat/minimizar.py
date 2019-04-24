@@ -22,12 +22,12 @@ sns.set_style("darkgrid")
 
 MAX_ITERATIONS = 50000
 
-NUM_REPETITIONS = 5
+NUM_REPETITIONS = 2
 
-START_TEMPERATURE = 1
+START_TEMPERATURE = 5
 FINAL_TEMPERATURE = 0.00001
 
-SA_MAX = 10
+SA_MAX = 3
 
 #####################
 def start():
@@ -55,7 +55,7 @@ def start():
         j.join()
 
 def process_instance(path, name):
-    print("Processing {}".format(name))
+    print("Processing: {}".format(name))
 
     lines = read_instance(path)
 
@@ -74,11 +74,13 @@ def process_instance(path, name):
             clauses.append([to_tuple(v1), to_tuple(v2), to_tuple(v3)])
 
     # mean, std = random_search(name, expected_right, clauses, n_vars, MAX_ITERATIONS, NUM_REPETITIONS)
-    # print("RS: Media: {}\nDesvio padrao: {}".format(mean, std))
+    # print("{} -> Random Search\n\tMedia: {}.\n\tDesvio padrao: {}".format(name, mean, std))
 
     mean, std = simmulated_annealing( name, expected_right, clauses, n_vars, START_TEMPERATURE, FINAL_TEMPERATURE, SA_MAX, MAX_ITERATIONS, NUM_REPETITIONS)
 
-    print("SA: Media: {}.\nDesvio padrao: {}".format(mean, std))
+    print("{} -> Simulated Anealing\n\tMedia: {}.\n\tDesvio padrao: {}".format(name, mean, std))
+
+    print("Finished: {}".format(name))
 
 
 if __name__ == '__main__':
