@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from random import randint, random, choice, seed
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,10 +31,11 @@ SA_MAX = 10
 
 #####################
 def start():
-    
+
     # Clear old results
     for file in os.scandir('resultados'):
-        os.unlink(file.path)
+        if file != '.gitkeep':
+            os.unlink(file.path)
 
     instances = fetch_instances()
 
