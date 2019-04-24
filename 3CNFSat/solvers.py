@@ -2,13 +2,8 @@ import numpy as np
 
 from helpers import *
 
-
-def update_temperature(
-    iteration, max_iterations, initial_temperature, final_temperature
-):
-    return (initial_temperature - final_temperature) / (
-        np.cosh(10 * iteration / max_iterations)
-    ) + final_temperature
+def update_temperature(iteration, max_iterations, initial_temperature, final_temperature):
+    return (initial_temperature - final_temperature) / (np.cosh(10 * iteration / max_iterations)) + final_temperature
 
 
 def random_search(name, expected_right, clauses, num_vars, max_iterations, repetitions):
