@@ -6,15 +6,14 @@ def update_temperature(iteration, max_iterations, initial_temperature, final_tem
     return (initial_temperature - final_temperature) / (np.cosh(5 * iteration / max_iterations)) + final_temperature
 
 
-def random_search(name, expected_right, clauses, num_vars, max_iterations, repetitions):
+def random_search(name, expected_right, clauses, num_vars, max_iterations, repetitions, cenario):
     total_scores = []
 
     for r in range(repetitions):
 
         local_scores = []
 
-        solution = generate_solution(num_vars)
-        solution_FO = evaluate_all(clauses, solution)
+        solution_FO = evaluate_all(clauses, generate_solution(num_vars))
 
         for i in range(max_iterations):
 
@@ -24,7 +23,6 @@ def random_search(name, expected_right, clauses, num_vars, max_iterations, repet
             local_scores.append(expected_right - new_score)
 
             if new_score > solution_FO:
-                solution = new_solution
                 solution_FO = new_score
 
         total_scores.append(local_scores)
@@ -36,7 +34,7 @@ def random_search(name, expected_right, clauses, num_vars, max_iterations, repet
         np_scores.mean(axis=0), np.arange(max_iterations), columns=["clausulas"]
     )
 
-    plot_convergence(convergence, "random_search", name)
+    plot_convergence(convergence, "random_search", name, cenario)
 
     return best_scores.mean(), best_scores.std()
 
@@ -51,6 +49,7 @@ def simmulated_annealing(
     SAMax,
     max_iterations,
     repetitions,
+    cenario
 ):
     total_scores = []
 
@@ -91,6 +90,6 @@ def simmulated_annealing(
         np_scores.mean(axis=0), np.arange(max_iterations), columns=["clausulas"]
     )
 
-    plot_convergence(convergence, "simulated_anealing", name)
+    plot_convergence(convergence, "simulated_anealing", name, cenario)
 
     return best_scores.mean(), best_scores.std()

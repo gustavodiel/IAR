@@ -20,23 +20,19 @@ sns.set_style("darkgrid")
 
 ###### Options ######
 
-MAX_ITERATIONS = 50000
+MAX_ITERATIONS = 250000
 
-NUM_REPETITIONS = 2
+NUM_REPETITIONS = 5
 
-START_TEMPERATURE = 5
+START_TEMPERATURE = 1
 FINAL_TEMPERATURE = 0.00001
 
-SA_MAX = 3
+SA_MAX = 1
+
+CENARIO = "c"
 
 #####################
 def start():
-
-    # Clear old results
-    for file in os.scandir('resultados'):
-        if file != '.gitkeep':
-            os.unlink(file.path)
-
     instances = fetch_instances()
 
     jobs = []
@@ -45,7 +41,10 @@ def start():
         path = instance["path"]
         name = instance["name"]
 
-        process = multiprocessing.Process(target=process_instance,args=(path, name))
+        # process = multiprocessing.Process(target=process_instance,args=(path, name, 0))
+        # jobs.append(process)
+
+        process = multiprocessing.Process(target=process_instance,args=(path, name, 1))
         jobs.append(process)
 
     for j in jobs:
@@ -54,8 +53,8 @@ def start():
     for j in jobs:
         j.join()
 
-def process_instance(path, name):
-    print("Processing: {}".format(name))
+def process_instance(path, name, algorithm):
+    print("Processing: {} with {}".format(name, "Random Search" if algorithm == 0 else "Simulated Anealing"))
 
     lines = read_instance(path)
 
@@ -73,12 +72,12 @@ def process_instance(path, name):
             v1, v2, v3, _ = line.split()
             clauses.append([to_tuple(v1), to_tuple(v2), to_tuple(v3)])
 
-    # mean, std = random_search(name, expected_right, clauses, n_vars, MAX_ITERATIONS, NUM_REPETITIONS)
-    # print("{} -> Random Search\n\tMedia: {}.\n\tDesvio padrao: {}".format(name, mean, std))
-
-    mean, std = simmulated_annealing( name, expected_right, clauses, n_vars, START_TEMPERATURE, FINAL_TEMPERATURE, SA_MAX, MAX_ITERATIONS, NUM_REPETITIONS)
-
-    print("{} -> Simulated Anealing\n\tMedia: {}.\n\tDesvio padrao: {}".format(name, mean, std))
+    if algorithm == 0:
+        mean, std = random_search(name, expected_right, clauses, n_vars, MAX_ITERATIONS, NUM_REPETITIONS, CENARIO)
+        print("{} -> Random Search\n\tMedia: {}.\n\tDesvio padrao: {}".format(name, mean, std))
+    else:
+        mean, std = simmulated_annealing( name, expected_right, clauses, n_vars, START_TEMPERATURE, FINAL_TEMPERATURE, SA_MAX, MAX_ITERATIONS, NUM_REPETITIONS, CENARIO)
+        print("{} -> Simulated Anealing\n\tMedia: {}.\n\tDesvio padrao: {}".format(name, mean, std))
 
     print("Finished: {}".format(name))
 

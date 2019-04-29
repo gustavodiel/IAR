@@ -26,17 +26,17 @@ def generate_solution(n_vars):
     return [choice([True, False]) for _ in range(n_vars)]
 
 
-def plot_convergence(df, name, instance):
+def plot_convergence(df, name, instance, cenario):
     df.index.name = "Iterações"
 
     fig, ax = plt.subplots()
     fig.set_size_inches(30, 8.27)
     sns.lineplot(x=df.index, y="clausulas", data=df, lw=0.4, ax=ax, estimator=None)
     sns.despine()
-    fig.savefig("resultados/{}_{}_convergence.png".format(instance, name))
+    fig.savefig("resultados/{}_{}_{}_convergence.png".format(instance, name, cenario))
 
-    # fig, ax = plt.subplots()
-    # fig.set_size_inches(30, 8.27)
-    # sns.lineplot(x=df.index, y="clausulas", data=df.rolling(1000).mean(), ax=ax)
-    # sns.despine()
-    # fig.savefig("resultados/{}_{}_convergence_agg.png".format(instance, name))
+    fig, ax = plt.subplots()
+    fig.set_size_inches(30, 8.27)
+    sns.lineplot(x=df.index, y="clausulas", data=df.rolling(1000).mean(), ax=ax)
+    sns.despine()
+    fig.savefig("resultados/{}_{}_{}_convergence_agg.png".format(instance, name, cenario))

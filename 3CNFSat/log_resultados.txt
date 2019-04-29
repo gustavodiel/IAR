@@ -1,0 +1,68 @@
+Cenário A:
+
+MAX_ITERATIONS = 250000
+
+NUM_REPETITIONS = 5
+
+START_TEMPERATURE = 5
+FINAL_TEMPERATURE = 0.00001
+
+SA_MAX = 1
+
+Reusltados:
+
+uf20-01 -> Simulated Anealing
+	Media: 0.0.
+	Desvio padrao: 0.0
+Finished: uf20-01
+uf20-01 -> Random Search
+	Media: 0.0.
+	Desvio padrao: 0.0
+Finished: uf20-01
+uf100-01 -> Simulated Anealing
+	Media: 0.4.
+	Desvio padrao: 0.48989794855663565
+Finished: uf100-01
+uf100-01 -> Random Search
+	Media: 26.4.
+	Desvio padrao: 1.3564659966250536
+Finished: uf100-01
+uf250-01 -> Simulated Anealing
+	Media: 1.6.
+	Desvio padrao: 0.4898979485566356
+Finished: uf250-01
+uf250-01 -> Random Search
+	Media: 85.8.
+	Desvio padrao: 3.1874754901018454
+
+11m 10s
+
+
+Cenario C:
+
+MAX_ITERATIONS = 250000
+
+NUM_REPETITIONS = 5
+
+START_TEMPERATURE = 1
+FINAL_TEMPERATURE = 0.00001
+
+SA_MAX = 1
+
+Processing: uf250-01 with Simulated Anealing
+Processing: uf100-01 with Simulated Anealing
+Processing: uf20-01 with Simulated Anealing
+uf20-01 -> Simulated Anealing
+	Media: 0.0.
+	Desvio padrao: 0.0
+Finished: uf20-01
+uf100-01 -> Simulated Anealing
+	Media: 0.4.
+	Desvio padrao: 0.48989794855663565
+Finished: uf100-01
+uf250-01 -> Simulated Anealing
+	Media: 0.8.
+	Desvio padrao: 0.4
+Finished: uf250-01
+
+9 min
