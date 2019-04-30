@@ -38,6 +38,32 @@ uf250-01 -> Random Search
 11m 10s
 
 
+Cenario B:
+
+MAX_ITERATIONS = 250000
+
+NUM_REPETITIONS = 5
+
+START_TEMPERATURE = 5
+FINAL_TEMPERATURE = 0.00001
+
+SA_MAX = 10
+
+
+uf20-01 -> Simulated Anealing
+	Media: 0.0.
+	Desvio padrao: 0.0
+Finished: uf20-01
+uf100-01 -> Simulated Anealing
+	Media: 0.0.
+	Desvio padrao: 0.0
+Finished: uf100-01
+uf250-01 -> Simulated Anealing
+	Media: 0.2.
+	Desvio padrao: 0.4
+
+
+
 Cenario C:
 
 MAX_ITERATIONS = 250000
