@@ -5,4 +5,8 @@ Acessar:
 
 - https://medium.com/analytics-vidhya/data-streams-and-online-machine-learning-in-python-a382e9e8d06a
 
-- Testar com Linear Regression pegando dados do uso de CPU do pc
+- https://colab.research.google.com/drive/1b-ye1Ij0Tqffs7VKk-xVj5c9gngOPTuR
+  - https://colab.research.google.com/notebooks/forms.ipynb#scrollTo=h9aZYKhly2h_
+  - https://colab.research.google.com/gist/gustavodiel/ac19f259237413998037ce0b79dc5184/untitled0.ipynb
+
+Testar com Linear Regression pegando dados do uso de CPU do pc
